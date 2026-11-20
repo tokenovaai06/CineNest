@@ -59,6 +59,13 @@ fun AddMovieScreen(
                 minLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
+            OutlinedTextField(
+                value = rating,
+                onValueChange = { rating = it },
+                label = { Text("Rating (0–10)") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
