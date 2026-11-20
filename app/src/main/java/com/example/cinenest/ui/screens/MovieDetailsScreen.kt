@@ -9,12 +9,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cinenest.model.Movie
+import com.example.cinenest.ui.components.CineNestTopBar
+import com.example.cinenest.ui.components.RatingBadge
 
 @Composable
 fun MovieDetailsScreen(
@@ -24,53 +26,56 @@ fun MovieDetailsScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        if (movie == null) {
-            Text(
-                text = "Movie not found",
-                style = MaterialTheme.typography.titleMedium
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            CineNestTopBar(
+                title = "Movie details",
+                canNavigateBack = true,
+                onNavigateBack = onNavigateBack
             )
-        } else {
-            Text(
-                text = movie.title,
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Text(
-                text = "${movie.year} • ${movie.genre}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Rating: ${movie.rating}",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = movie.description,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Button(
-                onClick = onFavoriteClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = if (movie.isFavorite) "Remove from favorites" else "Add to favorites")
-            }
-            Button(
-                onClick = onWatchedClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = if (movie.isWatched) "Watched" else "Mark as watched")
-            }
         }
-        OutlinedButton(
-            onClick = onNavigateBack,
-            modifier = Modifier.fillMaxWidth()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Back")
+            if (movie == null) {
+                Text(
+                    text = "Movie not found",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            } else {
+                Text(
+                    text = movie.title,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                Text(
+                    text = "${movie.year} • ${movie.genre}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                RatingBadge(rating = movie.rating)
+                Text(
+                    text = movie.description,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Button(
+                    onClick = onFavoriteClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = if (movie.isFavorite) "Remove from favorites" else "Add to favorites")
+                }
+                Button(
+                    onClick = onWatchedClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = if (movie.isWatched) "Watched" else "Mark as watched")
+                }
+            }
         }
     }
 }

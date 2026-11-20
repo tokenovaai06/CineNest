@@ -1,16 +1,12 @@
 package com.example.cinenest.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +33,10 @@ fun MovieCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
                 Text(
                     text = movie.title,
                     style = MaterialTheme.typography.titleMedium
@@ -46,17 +45,12 @@ fun MovieCard(
                     text = "${movie.year} • ${movie.genre}",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = "Rating: ${movie.rating}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                RatingBadge(rating = movie.rating)
             }
-            IconButton(onClick = onFavoriteClick) {
-                Icon(
-                    imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                    contentDescription = if (movie.isFavorite) "Remove from favorites" else "Add to favorites"
-                )
-            }
+            FavoriteButton(
+                isFavorite = movie.isFavorite,
+                onClick = onFavoriteClick
+            )
         }
     }
 }
