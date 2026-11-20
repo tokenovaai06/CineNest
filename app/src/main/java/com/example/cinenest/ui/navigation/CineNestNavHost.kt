@@ -1,8 +1,5 @@
 package com.example.cinenest.ui.navigation
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.cinenest.ui.components.CineNestTopBar
+import com.example.cinenest.ui.screens.AddMovieScreen
 import com.example.cinenest.ui.screens.MovieDetailsScreen
 import com.example.cinenest.ui.screens.MovieListScreen
 import com.example.cinenest.viewmodel.MovieViewModel
@@ -58,20 +55,13 @@ fun CineNestNavHost(
         }
 
         composable(route = Routes.ADD_MOVIE) {
-            Scaffold(
-                topBar = {
-                    CineNestTopBar(
-                        title = "Add movie",
-                        canNavigateBack = true,
-                        onNavigateBack = { navController.popBackStack() }
-                    )
-                }
-            ) { innerPadding ->
-                Text(
-                    text = "Add movie screen",
-                    modifier = Modifier.padding(innerPadding)
-                )
-            }
+            AddMovieScreen(
+                onSaveMovie = { title, description, rating, year, genre ->
+                    viewModel.addMovie(title, description, rating, year, genre)
+                    navController.popBackStack()
+                },
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
