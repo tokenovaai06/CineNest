@@ -17,6 +17,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.cinenest.ui.theme.CineNestTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun AddMovieScreen(
@@ -45,6 +49,8 @@ fun AddMovieScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "Add a new movie")
             OutlinedTextField(
@@ -119,5 +125,15 @@ fun AddMovieScreen(
                 )
             }
         }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun AddMovieScreenPreview() {
+    CineNestTheme {
+        AddMovieScreen(
+            onSaveMovie = { _, _, _, _, _ -> },
+            onNavigateBack = {}
+        )
     }
 }
