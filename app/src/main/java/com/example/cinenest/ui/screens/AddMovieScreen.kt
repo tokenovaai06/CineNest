@@ -66,6 +66,13 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            OutlinedTextField(
+                value = year,
+                onValueChange = { year = it },
+                label = { Text("Release year") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
