@@ -9,6 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.cinenest.ui.components.CineNestTopBar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.fillMaxWidth
 
 @Composable
 fun AddMovieScreen(
@@ -16,6 +22,13 @@ fun AddMovieScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var title by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    var rating by rememberSaveable { mutableStateOf("") }
+    var year by rememberSaveable { mutableStateOf("") }
+    var genre by rememberSaveable { mutableStateOf("") }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -32,6 +45,20 @@ fun AddMovieScreen(
                 .padding(innerPadding)
         ) {
             Text(text = "Add a new movie")
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Movie title") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Description") },
+                minLines = 3,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
