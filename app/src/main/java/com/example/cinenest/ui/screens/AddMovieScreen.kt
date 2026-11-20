@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun AddMovieScreen(
@@ -83,11 +84,39 @@ fun AddMovieScreen(
             )
             Button(
                 onClick = {
-                    // Validation and saving will be added next
+                    val ratingValue = rating.toDoubleOrNull()
+                    val yearValue = year.toIntOrNull()
+
+                    errorMessage = when {
+                        title.isBlank() -> "Enter movie title"
+                        description.isBlank() -> "Enter description"
+                        ratingValue == null || ratingValue !in 0.0..10.0 ->
+                            "Rating must be between 0 and 10"
+                        yearValue == null || yearValue !in 1888..2100 ->
+                            "Enter a valid release year"
+                        genre.isBlank() -> "Enter genre"
+                        else -> ""
+                    }
+
+                    if (errorMessage.isEmpty()) {
+                        onSaveMovie(
+                            title.trim(),
+                            description.trim(),
+                            ratingValue!!,
+                            yearValue!!,
+                            genre.trim()
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Save movie")
+            }
+            if (errorMessage.isNotEmpty()) {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     }
