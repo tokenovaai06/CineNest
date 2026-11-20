@@ -36,4 +36,19 @@ class MovieViewModel : ViewModel() {
             )
         }
     }
+
+    fun addMovie(title: String, description: String, rating: Double, year: Int, genre: String) {
+        _uiState.update { currentState ->
+            val newId = (currentState.movies.maxOfOrNull { it.id } ?: 0) + 1
+            val newMovie = Movie(
+                id = newId,
+                title = title,
+                description = description,
+                rating = rating,
+                year = year,
+                genre = genre
+            )
+            currentState.copy(movies = currentState.movies + newMovie)
+        }
+    }
 }
