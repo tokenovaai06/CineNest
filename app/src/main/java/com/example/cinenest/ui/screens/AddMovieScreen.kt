@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 
 @Composable
 fun AddMovieScreen(
@@ -80,6 +81,14 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            Button(
+                onClick = {
+                    // Validation and saving will be added next
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Save movie")
+            }
         }
     }
 }
