@@ -45,8 +45,11 @@ fun CineNestNavHost(
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+            val movie = uiState.movies.find { it.id == movieId }
             MovieDetailsScreen(
-                movieId = movieId,
+                movie = movie,
+                onFavoriteClick = { viewModel.toggleFavorite(movieId) },
+                onWatchedClick = { viewModel.toggleWatched(movieId) },
                 onNavigateBack = { navController.popBackStack() }
             )
         }
