@@ -73,6 +73,13 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            OutlinedTextField(
+                value = genre,
+                onValueChange = { genre = it },
+                label = { Text("Genre") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
