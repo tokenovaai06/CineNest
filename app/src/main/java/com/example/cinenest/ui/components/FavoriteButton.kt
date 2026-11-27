@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.cinenest.ui.theme.CinemaRed
+import com.example.cinenest.ui.theme.CinemaGray
 
 @Composable
 fun FavoriteButton(
@@ -28,7 +30,7 @@ fun FavoriteButton(
             } else {
                 "Add to favorites"
             },
-            tint = if (isFavorite) Color.Red else Color.Gray,
+            tint = if (isFavorite) CinemaRed else CinemaGray,
             modifier = Modifier.size(24.dp)
         )
     }
