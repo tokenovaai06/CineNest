@@ -20,9 +20,9 @@ import com.example.cinenest.viewmodel.MovieViewModel
 fun CineNestNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: MovieViewModel = viewModel()
+    movieViewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by movieViewModel.uiState.collectAsState()
 
     NavHost(
         navController = navController,
@@ -32,10 +32,13 @@ fun CineNestNavHost(
         composable(route = Routes.MOVIE_LIST) {
             MovieListScreen(
                 movies = uiState.movies,
+                isLoading = uiState.isLoading,
+                errorMessage = uiState.errorMessage,
+                onRefresh = { movieViewModel.refresh() },
                 onMovieClick = { movieId ->
                     navController.navigate(Routes.movieDetails(movieId))
                 },
-                onFavoriteClick = { movieId -> viewModel.toggleFavorite(movieId) },
+                onFavoriteClick = { movieId -> movieViewModel.toggleFavorite(movieId) },
                 onAddMovieClick = { navController.navigate(Routes.ADD_MOVIE) }
             )
         }
@@ -48,8 +51,8 @@ fun CineNestNavHost(
             val movie = uiState.movies.find { it.id == movieId }
             MovieDetailsScreen(
                 movie = movie,
-                onFavoriteClick = { viewModel.toggleFavorite(movieId) },
-                onWatchedClick = { viewModel.toggleWatched(movieId) },
+                onFavoriteClick = { movieViewModel.toggleFavorite(movieId) },
+                onWatchedClick = { movieViewModel.toggleWatched(movieId) },
                 onNavigateBack = { navController.popBackStack() }
             )
         }
@@ -57,7 +60,7 @@ fun CineNestNavHost(
         composable(route = Routes.ADD_MOVIE) {
             AddMovieScreen(
                 onSaveMovie = { title, description, rating, year, genre ->
-                    viewModel.addMovie(title, description, rating, year, genre)
+                    movieViewModel.addMovie(title, description, rating, year, genre)
                     navController.popBackStack()
                 },
                 onNavigateBack = { navController.popBackStack() }
