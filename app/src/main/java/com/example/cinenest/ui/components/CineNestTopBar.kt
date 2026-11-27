@@ -9,6 +9,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.example.cinenest.ui.theme.CinemaRed
+import com.example.cinenest.ui.theme.CinemaWhite
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,7 +27,28 @@ fun CineNestTopBar(
 ) {
     CenterAlignedTopAppBar(
         title = {
-            Text(text = title)
+            if (title == "CineNest") {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(SpanStyle(color = CinemaWhite)) {
+                            append("Cine")
+                        }
+                        withStyle(SpanStyle(color = CinemaRed)) {
+                            append("Nest")
+                        }
+                    },
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp
+                )
+            } else {
+                Text(
+                    text = title,
+                    color = CinemaWhite,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         },
         modifier = modifier,
         navigationIcon = {
