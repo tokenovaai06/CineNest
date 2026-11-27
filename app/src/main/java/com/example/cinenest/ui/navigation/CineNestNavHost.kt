@@ -32,6 +32,9 @@ fun CineNestNavHost(
         composable(route = Routes.MOVIE_LIST) {
             MovieListScreen(
                 movies = uiState.movies,
+                isLoading = uiState.isLoading,
+                errorMessage = uiState.errorMessage,
+                onRefresh = { movieViewModel.refresh() },
                 onMovieClick = { movieId ->
                     navController.navigate(Routes.movieDetails(movieId))
                 },
