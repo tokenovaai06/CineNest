@@ -53,5 +53,6 @@ fun MovieEntity.toMovie(): Movie =
         year = year,
         genre = genre,
         isFavorite = isFavorite,
-        isWatched = isWatched
+        isWatched = isWatched,
+        posterUrl = posterUrl.orEmpty()
     )
