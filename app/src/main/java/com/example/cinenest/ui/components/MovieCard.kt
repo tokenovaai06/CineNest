@@ -16,6 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cinenest.model.Movie
 import com.example.cinenest.ui.theme.CineNestTheme
+import androidx.compose.material3.CardDefaults
+import com.example.cinenest.ui.theme.CinemaSurface
 
 @Composable
 fun MovieCard(
@@ -27,8 +29,11 @@ fun MovieCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-    ) {
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = CinemaSurface
+        )
+    )  {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
