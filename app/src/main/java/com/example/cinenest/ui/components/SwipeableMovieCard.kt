@@ -17,6 +17,13 @@ import androidx.compose.ui.unit.dp
 import com.example.cinenest.model.Movie
 import com.example.cinenest.ui.theme.CineNestTheme
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import kotlin.math.abs
 
 @Composable
 fun SwipeableMovieCard(
@@ -112,13 +119,53 @@ fun SwipeableMovieCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            MoviePoster(
-                posterUrl = movie.posterUrl,
-                contentDescription = movie.title,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(2f / 3f)
-            )
+            ) {
+                MoviePoster(
+                    posterUrl = movie.posterUrl,
+                    contentDescription = movie.title,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                val swipeOffset = offsetX.value
+                val labelAlpha = (abs(swipeOffset) / 200f)
+                    .coerceIn(0f, 1f)
+
+                if (swipeOffset != 0f) {
+                    val isLike = swipeOffset > 0f
+                    val labelColor = if (isLike) {
+                        Color(0xFF4CAF50)
+                    } else {
+                        Color(0xFFE50914)
+                    }
+
+                    Text(
+                        text = if (isLike) "LIKE" else "NOPE",
+                        color = labelColor,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 32.dp)
+                            .graphicsLayer {
+                                alpha = labelAlpha
+                                rotationZ = if (isLike) -15f else 15f
+                            }
+                            .border(
+                                width = 3.dp,
+                                color = labelColor,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(
+                                horizontal = 16.dp,
+                                vertical = 8.dp
+                            )
+                    )
+                }
+            }
 
             Text(
                 text = movie.title,
