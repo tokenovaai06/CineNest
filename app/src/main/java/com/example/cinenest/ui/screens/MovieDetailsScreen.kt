@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cinenest.model.Movie
 import com.example.cinenest.ui.components.CineNestTopBar
-import com.example.cinenest.ui.components.PosterImage
+import com.example.cinenest.ui.components.MoviePoster
 import com.example.cinenest.ui.components.RatingBadge
 
 @Composable
@@ -56,7 +56,7 @@ fun MovieDetailsScreen(
                 )
             } else {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    PosterImage(
+                    MoviePoster(
                         posterUrl = movie.posterUrl,
                         contentDescription = movie.title,
                         modifier = Modifier

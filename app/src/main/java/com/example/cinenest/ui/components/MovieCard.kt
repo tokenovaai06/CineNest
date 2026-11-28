@@ -46,7 +46,7 @@ fun MovieCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            PosterImage(
+            MoviePoster(
                 posterUrl = movie.posterUrl,
                 contentDescription = movie.title,
                 modifier = Modifier
