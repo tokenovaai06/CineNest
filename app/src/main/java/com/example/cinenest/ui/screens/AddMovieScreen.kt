@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun AddMovieScreen(
@@ -79,6 +81,9 @@ fun AddMovieScreen(
                 onValueChange = { rating = it },
                 label = { Text("Rating (0–10)") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -87,6 +92,9 @@ fun AddMovieScreen(
                 onValueChange = { year = it },
                 label = { Text("Release year") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
