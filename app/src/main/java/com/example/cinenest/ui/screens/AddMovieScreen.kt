@@ -1,4 +1,3 @@
-
 package com.example.cinenest.ui.screens
 
 import androidx.compose.foundation.layout.Column
@@ -21,6 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.cinenest.ui.theme.CineNestTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.imePadding
 
 @Composable
 fun AddMovieScreen(
@@ -49,10 +51,13 @@ fun AddMovieScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .imePadding()
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "Add a new movie")
+
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
@@ -60,6 +65,7 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
@@ -67,6 +73,7 @@ fun AddMovieScreen(
                 minLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
+
             OutlinedTextField(
                 value = rating,
                 onValueChange = { rating = it },
@@ -74,6 +81,7 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
             OutlinedTextField(
                 value = year,
                 onValueChange = { year = it },
@@ -81,6 +89,7 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
             OutlinedTextField(
                 value = genre,
                 onValueChange = { genre = it },
@@ -88,6 +97,7 @@ fun AddMovieScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
             Button(
                 onClick = {
                     val ratingValue = rating.toDoubleOrNull()
@@ -118,6 +128,7 @@ fun AddMovieScreen(
             ) {
                 Text("Save movie")
             }
+
             if (errorMessage.isNotEmpty()) {
                 Text(
                     text = errorMessage,
@@ -127,6 +138,7 @@ fun AddMovieScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun AddMovieScreenPreview() {
