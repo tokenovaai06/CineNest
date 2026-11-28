@@ -86,3 +86,33 @@ fun FavoritesScreenPreview() {
         )
     }
 }
+@Preview(showBackground = true)
+@Composable
+fun FavoritesScreenWithMoviesPreview() {
+    CineNestTheme {
+        FavoritesScreen(
+            movies = listOf(
+                Movie(
+                    id = 1,
+                    title = "Interstellar",
+                    description = "A journey through space.",
+                    rating = 8.7,
+                    year = 2014,
+                    genre = "Sci-Fi",
+                    isFavorite = true
+                ),
+                Movie(
+                    id = 2,
+                    title = "Avatar",
+                    description = "A journey to Pandora.",
+                    rating = 8.1,
+                    year = 2009,
+                    genre = "Adventure",
+                    isFavorite = true
+                )
+            ),
+            onMovieClick = {},
+            onFavoriteClick = {}
+        )
+    }
+}
