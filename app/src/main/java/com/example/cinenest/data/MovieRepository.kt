@@ -7,6 +7,9 @@ import com.example.cinenest.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+// TMDB always returns 20 movies per page
+private const val PAGE_SIZE = 20
+
 class MovieRepository(
     private val api: TmdbApi,
     private val movieDao: MovieDao
@@ -16,19 +19,28 @@ class MovieRepository(
         entities.map { it.toMovie() }
     }
 
-    suspend fun refreshPopularMovies() {
-        val response = api.getPopularMovies(page = 1)
+    // Loads page 1 again and removes old pages. Returns true if TMDB has more pages.
+    suspend fun refreshPopularMovies(): Boolean = loadPage(page = 1, replaceOld = true)
+
+    // Adds the next page to the end of the list. Returns true if TMDB has more pages.
+    suspend fun loadPopularPage(page: Int): Boolean = loadPage(page = page, replaceOld = false)
+
+    private suspend fun loadPage(page: Int, replaceOld: Boolean): Boolean {
+        val response = api.getPopularMovies(page = page)
         val saved = movieDao.getAll().associateBy { it.id }
         val entities = response.results.mapIndexed { index, dto ->
             val old = saved[dto.id]
             dto.toEntity(
-                position = index,
+                position = (page - 1) * PAGE_SIZE + index,
                 isFavorite = old?.isFavorite ?: false,
                 isWatched = old?.isWatched ?: false
             )
         }
-        movieDao.deleteUnusedTmdbMovies(keepIds = entities.map { it.id })
+        if (replaceOld) {
+            movieDao.deleteUnusedTmdbMovies(keepIds = entities.map { it.id })
+        }
         movieDao.upsertAll(entities)
+        return response.page < response.totalPages
     }
 
     suspend fun toggleFavorite(movieId: Int) {

@@ -77,7 +77,10 @@ fun CineNestNavHost(
                     movies = uiState.movies,
                     isLoading = uiState.isLoading,
                     errorMessage = uiState.errorMessage,
+                    isLoadingMore = uiState.isLoadingMore,
+                    loadMoreFailed = uiState.loadMoreFailed,
                     onRefresh = { movieViewModel.refresh() },
+                    onLoadMore = { movieViewModel.loadMore() },
                     onMovieClick = { movieId ->
                         navController.navigate(Routes.movieDetails(movieId))
                     },
