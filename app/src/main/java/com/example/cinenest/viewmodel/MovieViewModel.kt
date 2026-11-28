@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
@@ -22,20 +23,36 @@ import retrofit2.HttpException
 data class MovieUiState(
     val movies: List<Movie> = emptyList(),
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val isLoadingMore: Boolean = false,
+    val loadMoreFailed: Boolean = false
+)
+
+// Everything about loading, kept in one place so it is updated together
+private data class LoadState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val isLoadingMore: Boolean = false,
+    val loadMoreFailed: Boolean = false,
+    val canLoadMore: Boolean = true
 )
 
 class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    private val isLoading = MutableStateFlow(false)
-    private val errorMessage = MutableStateFlow<String?>(null)
+    private val loadState = MutableStateFlow(LoadState())
+    private var nextPage = 2
 
     val uiState: StateFlow<MovieUiState> = combine(
         repository.movies,
-        isLoading,
-        errorMessage
-    ) { movies, loading, error ->
-        MovieUiState(movies = movies, isLoading = loading, errorMessage = error)
+        loadState
+    ) { movies, state ->
+        MovieUiState(
+            movies = movies,
+            isLoading = state.isLoading,
+            errorMessage = state.errorMessage,
+            isLoadingMore = state.isLoadingMore,
+            loadMoreFailed = state.loadMoreFailed
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -48,22 +65,47 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
     fun refresh() {
         viewModelScope.launch {
-            isLoading.value = true
-            errorMessage.value = null
+            loadState.update { it.copy(isLoading = true, errorMessage = null) }
             try {
-                repository.refreshPopularMovies()
+                val hasMorePages = repository.refreshPopularMovies()
+                nextPage = 2
+                loadState.update { it.copy(canLoadMore = hasMorePages, loadMoreFailed = false) }
             } catch (e: IOException) {
-                errorMessage.value = "No internet connection. Pull down to try again."
+                loadState.update { it.copy(errorMessage = "No internet connection. Pull down to try again.") }
             } catch (e: HttpException) {
-                errorMessage.value = if (e.code() == 401) {
+                val message = if (e.code() == 401) {
                     "TMDB API key is missing or invalid."
                 } else {
                     "Server error (${e.code()}). Try again later."
                 }
+                loadState.update { it.copy(errorMessage = message) }
             } catch (e: SerializationException) {
-                errorMessage.value = "Unexpected data from the server."
+                loadState.update { it.copy(errorMessage = "Unexpected data from the server.") }
             } finally {
-                isLoading.value = false
+                loadState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    // Called when the user scrolls near the end of the list
+    fun loadMore() {
+        val state = loadState.value
+        if (state.isLoading || state.isLoadingMore || !state.canLoadMore) return
+
+        viewModelScope.launch {
+            loadState.update { it.copy(isLoadingMore = true, loadMoreFailed = false) }
+            try {
+                val hasMorePages = repository.loadPopularPage(nextPage)
+                nextPage++
+                loadState.update { it.copy(canLoadMore = hasMorePages) }
+            } catch (e: IOException) {
+                loadState.update { it.copy(loadMoreFailed = true) }
+            } catch (e: HttpException) {
+                loadState.update { it.copy(loadMoreFailed = true) }
+            } catch (e: SerializationException) {
+                loadState.update { it.copy(loadMoreFailed = true) }
+            } finally {
+                loadState.update { it.copy(isLoadingMore = false) }
             }
         }
     }
